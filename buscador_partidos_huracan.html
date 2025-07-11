@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscador "Globopedia" de Partidos de Huracán</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #a30000;
+    }
+    select {
+      padding: 8px;
+      margin: 5px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 14px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #a30000;
+      color: white;
+    }
+    img {
+      max-height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Buscador de Partidos de Huracán</h1>
+  <div id="filtros" style="text-align: center; margin-bottom: 20px;">
+    <select id="anio"><option value="">Año</option></select>
+    <select id="competicion"><option value="">Competición</option></select>
+    <select id="rival"><option value="">Rival</option></select>
+    <select id="resultado"><option value="">Resultado</option></select>
+    <select id="estadio"><option value="">Estadio</option></select>
+    <select id="arbitro"><option value="">Árbitro</option></select>
+  </div>
+  <table id="tablaPartidos" style="display:none;">
+    <thead>
+      <tr>
+        <th>Año</th>
+        <th>Competición</th>
+        <th>Rival</th>
+        <th>Resultado</th>
+        <th>Formaciones</th>
+        <th>Fecha</th>
+        <th>Estadio</th>
+        <th>Árbitro</th>
+        <th>Goleadores</th>
+        <th>Expulsados</th>
+        <th>Observaciones</th>
+        <th>Foto</th>
+      </tr>
+    </thead>
+    <tbody id="resultado"></tbody>
+  </table>
+
+  <script>
+    const datos = [
+{'Año': '2025', 'Competición': 'Amistoso', 'Rival': 'Danubio', 'Resultado': '2-0', 'Formaciones': 'Danubio: Goicochea; Argüello; González; Perg y Rabino; Romero; Pintos; Fernández y Femia; Núñez y Fernández. Huracán: Mesa; Campo; Moya; Villar y Lescano; Watson; Spina; Pérez y Cabral; Ábila y Ramírez.', 'Fecha': '29/1/2025', 'Estadio': 'Charrúa (Montevideo)', 'Árbitro': 'Arman', 'Goleadores': '47 Ramírez; 80 Tissera', 'Expulsados': 'no hubo', 'Observaciones': 'no hubo', 'Fotografía': '<img src="https://drive.google.com/file/d/10Afml5pvLgROU_YUO7Lghcm-qbwdQk8L/view?usp=drive_link" alt="foto">'},
+{'Año': '2025', 'Competición': 'Apertura LPF', 'Rival': 'Belgrano (Córdoba)', 'Resultado': '1-1', 'Formaciones': 'Belgrano: Espínola; Compagnucci (85 Heredia); Leguizamón; Meriano (73 Troilo) y Velázquez; Menossi (66 Fernández); Quignón; Zelarayán y González; Reyna (66 Sánchez) y Jara (84 Passerini). Huracán: Galíndez; Guidara; Pereyra; Zabala (73 Pellegrino) e Ibáñez; Pérez; Gil; Watson (82 Watson) y Alanís (68 Urzi); Mazzantti (81 Cabral) y Ramírez (69 Tissera).', 'Fecha': '24/1/2025', 'Estadio': 'Alberdi (Córdoba)', 'Árbitro': 'Lobo Medina.', 'Goleadores': '34ec Zabala; 38 Mazzantti.', 'Expulsados': 'no hubo', 'Observaciones': 'no hubo', 'Fotografía': '<img src="https://drive.google.com/file/d/1TBXF265cbiErCT27LCGsMjbAtKCj5uCN/view?usp=drive_link" alt="foto">'},
+{'Año': '2025', 'Competición': 'Apertura LPF', 'Rival': 'Estudiantes (La Plata)', 'Resultado': '0-0', 'Formaciones': 'Huracán: Galíndez; Guidara; Pereyra; Pellegrino e Ibáñez; Pérez (82 Tissera); Gil; Watson (56 Miljevic) y Alanís (68 Urzi); Mazzantti y Ramírez (68 Sequeira). Estudiantes (La Plata): Mansilla; Meza; Boselli; Rodríguez y Benedetti; Neves (84 Núñez); Ascacibar; Burgos (46 Arzamendia) y Cetré (46 Manyoma); Palacios (66 Medina) y Carrillo (66 Alario).', 'Fecha': '29/1/2025', 'Estadio': 'Ducó', 'Árbitro': 'Echenique', 'Goleadores': 'no hubo', 'Expulsados': '90+5 Benedetti', 'Observaciones': 'no hubo.', 'Fotografía': '<img src="https://drive.google.com/file/d/1TBXF265cbiErCT27LCGsMjbAtKCj5uCN/view?usp=drive_link" alt="foto">'},
+{'Año': '2025', 'Competición': 'Apertura LPF', 'Rival': 'Boca Juniors', 'Resultado': '1-2', 'Formaciones': 'Boca Juniors: Marchesín; Advíncula; Battaglia; Costa y Saracchi; Alarcón; Belmonte; Palacios (89 Zenon) y Velasco (78 Rey); Zeballos (60 Merentiel) y Cavani (90 Giménez). Huracán: Galíndez; Guidara; Pereyra; Pellegrino e Ibáñez; Pérez (77 Ojeda); Gil; Miljevic (61 Watson) y Alanís (77 Tissera); Mazzantti (86 Urzi) y Ramírez (62 Sequeira).', 'Fecha': '2/2/2025', 'Estadio': 'La Bombonera', 'Árbitro': 'Trucco', 'Goleadores': '19 Cavani; 30 Pellegrino; 68 Palacios.', 'Expulsados': 'no hubo', 'Observaciones': 'no hubo', 'Fotografía': '<img src="https://drive.google.com/file/d/1TBXF265cbiErCT27LCGsMjbAtKCj5uCN/view?usp=drive_link" alt="foto">'},
+{'Año': '2025', 'Competición': 'Apertura LPF', 'Rival': 'Tigre', 'Resultado': '2-0', 'Formaciones': 'Huracán: Galíndez; Guidara (87 De la Fuente); Pereyra; Pellegrino e Ibáñez; Pérez (66 Ojeda); Gil; Miljevic y Alanis (87 Cantillo); Mazzantti (62 Urzi) y Tissera (66 Ramírez). Tigre: Zenobio; Ortega; Laso; Paz y Banegas; Scipioni (77 Garay); González (67 Zalazar); López y Fértoli (77 Besozzi); Saralegui (67 Romero) y Russo.', 'Fecha': '7/2/2025', 'Estadio': 'Ducó', 'Árbitro': 'Zunino', 'Goleadores': '17 Tissera; 83p Miljevic', 'Expulsados': 'no hubo', 'Observaciones': 'no hubo', 'Fotografía': '<img src="https://drive.google.com/file/d/1TBXF265cbiErCT27LCGsMjbAtKCj5uCN/view?usp=drive_link" alt="foto">'},
+
+    ];
+
+    const campos = ["Año", "Competición", "Rival", "Resultado", "Estadio", "Árbitro"];
+
+    function cargarOpciones() {
+      campos.forEach(campo => {
+        const select = document.getElementById(campo.toLowerCase());
+        const opciones = [...new Set(datos.map(d => d[campo]).filter(Boolean))].sort();
+        opciones.forEach(op => {
+          const option = document.createElement("option");
+          option.value = op;
+          option.textContent = op;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    function filtrar() {
+      const filtros = {};
+      campos.forEach(c => {
+        const val = document.getElementById(c.toLowerCase()).value;
+        if (val) filtros[c] = val;
+      });
+
+      const resultados = datos.filter(d => {
+        return Object.entries(filtros).every(([key, val]) => d[key] === val);
+      });
+
+      const cuerpo = document.getElementById("resultado");
+      cuerpo.innerHTML = "";
+      resultados.forEach(d => {
+        const fila = document.createElement("tr");
+        ["Año","Competición","Rival","Resultado","Formaciones","Fecha","Estadio","Árbitro","Goleadores","Expulsados","Observaciones","Fotografía"].forEach(c => {
+          const td = document.createElement("td");
+          td.innerHTML = d[c] || "";
+          fila.appendChild(td);
+        });
+        cuerpo.appendChild(fila);
+      });
+
+      document.getElementById("tablaPartidos").style.display = resultados.length ? "table" : "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarOpciones();
+      document.querySelectorAll("select").forEach(sel => {
+        sel.addEventListener("change", filtrar);
+      });
+    });
+  </script>
+</body>
+</html>
